@@ -14,11 +14,11 @@ A minimalist implementation of a customer support agent with long-term memory us
 
 ## Example Conversation
 ```
-User: I'd like to request a refund for my order 12345.
-... (start a new conversation)
-User: "I'd like to get a refund for my order 12345."
-Agent: *searches memory for prior messages about order number*
-Agent: "According to my information, you've already requested a refund for this order."
+User: "I'd like to request a refund for my order #12345."
+... (new conversation starts)
+User: "I'd like to get a refund for order #12345."
+Agent: *searching memory for previous interactions about this order*
+Agent: "I can see from my records that you've already submitted a refund request for order #12345."
 ```
 
 ## Installation
@@ -37,6 +37,12 @@ Agent: "According to my information, you've already requested a refund for this 
    ```bash
    cp .env.example .env
    ```
+5. Add project root to Python path:
+   ```bash
+   export PYTHONPATH=$PYTHONPATH:$(pwd)
+   ```
+
+IMPORTANT: When switching between local and remote modes by modifying environment variables, you must restart your terminal for changes to take effect.
 
 ## Usage
 
