@@ -14,9 +14,11 @@ A minimalist implementation of a customer support agent with long-term memory us
 
 ## Example Conversation
 ```
-User: "I can't remember my order number, but I asked about it earlier."
+User: I'd like to request a refund for my order 12345.
+... (start a new conversation)
+User: "I'd like to get a refund for my order 12345."
 Agent: *searches memory for prior messages about order number*
-Agent: "No problem, I have your order number as 12345 from our earlier chat."
+Agent: "According to my information, you've already requested a refund for this order."
 ```
 
 ## Installation
@@ -45,13 +47,13 @@ Agent: "No problem, I have your order number as 12345 from our earlier chat."
    ```
 2. Run the agency:
    ```bash
-   python memory_agency/remote_agency.py
+   python memory_agency/agency.py
    ```
 
 ### Local Storage Only
 Run without mem0 API key to use local storage:
 ```bash
-python memory_agency/local_agency.py
+python memory_agency/agency.py
 ```
 
 ## Implementation Approaches
@@ -73,16 +75,15 @@ python memory_agency/local_agency.py
 ```
 memory_agency/
 ├── agents/
-│   └── customer_support/
-│       ├── agent.py          # Customer support agent implementation
-│       ├── instructions.md   # Agent instructions
+│   └── CustomerSupportAgent/
+│       ├── CustomerSupportAgent.py  # Customer support agent implementation
+│       ├── instructions.md          # Agent instructions
 │       └── tools/
-│           ├── add_memory.py     # Store conversation messages
-│           ├── search_memory.py  # Search past conversations
-│           └── delete_memory.py  # Delete user memory
-├── config.py         # Configuration and memory client setup
-├── local_agency.py   # Local storage version
-└── remote_agency.py  # mem0 API version
+│           ├── AddMemory.py         # Store conversation messages
+│           ├── SearchMemory.py      # Search past conversations
+│           └── DeleteMemory.py      # Delete user memory
+├── config.py                        # Configuration and memory client setup
+├── agency.py
 ```
 
 ## Memory Operations
@@ -96,9 +97,9 @@ Both implementations provide three core operations through Agency Swarm tools:
 
 Test individual tools:
 ```bash
-python memory_agency/agents/customer_support/tools/add_memory.py
-python memory_agency/agents/customer_support/tools/search_memory.py
-python memory_agency/agents/customer_support/tools/delete_memory.py
+python memory_agency/agents/customer_support/tools/AddMemory.py
+python memory_agency/agents/customer_support/tools/SearchMemory.py
+python memory_agency/agents/customer_support/tools/DeleteMemory.py
 ```
 
 ## License
