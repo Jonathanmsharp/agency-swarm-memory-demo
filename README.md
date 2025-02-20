@@ -1,13 +1,23 @@
 # Agency Swarm Memory Demo
 
-A minimalist implementation of a customer support agent with long-term memory using [mem0](https://github.com/mem0ai/mem0) and Agency Swarm framework.
+A minimalist implementation of a customer support agent with long-term memory using [mem0](https://github.com/mem0ai/mem0) and Agency Swarm framework. The project demonstrates two approaches to memory management: API-based using Mem0's cloud service and local storage simulation.
 
 ## Features
 
 - Long-term memory for customer support conversations
 - Per-user memory isolation
-- Automatic fallback to local storage when mem0 API is unavailable
-- Simple keyword-based search for local storage
+- Semantic search with Mem0 API for intelligent context retrieval
+- Automatic fallback to local storage with keyword-based search
+- Conversation workflow with memory-enhanced responses
+- Modular tool-based architecture for memory operations
+
+## Example Conversation
+
+```
+User: "I can't remember my order number, but I asked about it earlier."
+Agent: *searches memory for prior messages about order number*
+Agent: "No problem, I have your order number as 12345 from our earlier chat."
+```
 
 ## Installation
 
@@ -44,6 +54,20 @@ Run without mem0 API key to use local storage:
 python memory_agency/local_agency.py
 ```
 
+## Implementation Approaches
+
+### API-Based (Mem0 Cloud)
+- Uses Mem0's managed cloud service for memory storage
+- Semantic vector search for intelligent context retrieval
+- Enterprise-grade security and automatic scaling
+- Requires internet connectivity and API key
+
+### Local Storage
+- Fully self-contained implementation
+- Simple keyword-based search (can be extended with local embeddings)
+- Complete data privacy and control
+- No external dependencies
+
 ## Project Structure
 
 ```
@@ -60,6 +84,13 @@ memory_agency/
 ├── local_agency.py   # Local storage version
 └── remote_agency.py  # mem0 API version
 ```
+
+## Memory Operations
+
+Both implementations provide three core operations through Agency Swarm tools:
+- **Add Memory**: Store new conversation messages
+- **Search Memory**: Retrieve relevant past conversations
+- **Delete Memory**: Clear user-specific memory
 
 ## Testing
 
