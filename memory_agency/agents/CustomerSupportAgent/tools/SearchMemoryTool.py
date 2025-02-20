@@ -4,12 +4,6 @@ from typing import List, Dict
 import json
 from memory_agency.config import MEMORY_PATH, get_memory_client, init_memory_store
 
-# Try importing mem0 at module level for better error handling
-try:
-    from mem0 import MemoryClient
-    HAS_MEM0 = True
-except ImportError:
-    HAS_MEM0 = False
 
 class SearchMemoryTool(BaseTool):
     """Search for relevant memories based on a query."""
@@ -75,4 +69,4 @@ if __name__ == "__main__":
         top_k=3
     )
     results = tool.run()
-    print("Found memories:", results) 
+    print("Found memories:", results)

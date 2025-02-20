@@ -3,12 +3,6 @@ from pydantic import Field
 import json
 from memory_agency.config import MEMORY_PATH, get_memory_client, init_memory_store
 
-# Try importing mem0 at module level for better error handling
-try:
-    from mem0 import MemoryClient
-    HAS_MEM0 = True
-except ImportError:
-    HAS_MEM0 = False
 
 class DeleteMemoryTool(BaseTool):
     """Delete all stored memory for a specific user."""

@@ -1,6 +1,10 @@
 from agency_swarm import Agent
-import os
 from pathlib import Path
+
+from .tools.AddMemoryTool import AddMemoryTool
+from .tools.SearchMemoryTool import SearchMemoryTool
+from .tools.DeleteMemoryTool import DeleteMemoryTool
+
 
 class CustomerSupportAgent(Agent):
     def __init__(self):
@@ -9,12 +13,16 @@ class CustomerSupportAgent(Agent):
             name="Customer Support",
             description="A customer support agent with memory capabilities for personalized assistance.",
             instructions=str(current_dir / "instructions.md"),
-            tools_folder=str(current_dir / "tools"),
-            temperature=0.7,
+            tools=[
+                AddMemoryTool,
+                SearchMemoryTool,
+                DeleteMemoryTool
+            ],
+            temperature=0.5,
             max_prompt_tokens=25000,
         )
 
 if __name__ == "__main__":
     # Test the agent
     agent = CustomerSupportAgent()
-    print(f"Agent {agent.name} initialized with {len(agent.tools)} tools") 
+    print(f"Agent {agent.name} initialized with {len(agent.tools)} tools")

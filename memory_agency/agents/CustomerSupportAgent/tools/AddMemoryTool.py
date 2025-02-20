@@ -5,7 +5,14 @@ import json
 from memory_agency.config import MEMORY_PATH, get_memory_client, init_memory_store
 
 class AddMemoryTool(BaseTool):
-    """Store conversation messages into long-term memory."""
+    """Store conversation messages into long-term memory.
+    
+    Example:
+        messages=[
+            {"role": "user", "content": "My order number is 12345"},
+            {"role": "assistant", "content": "I've noted your order number: 12345"}
+        ]
+    """
     messages: List[Dict[str, str]] = Field(
         ...,
         description="List of messages to store. Each message should be a dict with 'role' and 'content' keys."
@@ -39,7 +46,7 @@ class AddMemoryTool(BaseTool):
                     "text": msg["content"],
                     "role": msg["role"]
                 })
-            
+
             with open(MEMORY_PATH, 'w') as f:
                 json.dump(memory_store, f, indent=2)
 

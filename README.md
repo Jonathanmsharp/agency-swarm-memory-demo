@@ -10,9 +10,9 @@ A minimalist implementation of a customer support agent with long-term memory us
 - Automatic fallback to local storage with keyword-based search
 - Conversation workflow with memory-enhanced responses
 - Modular tool-based architecture for memory operations
+- View stored memories in Mem0 dashboard at https://app.mem0.ai/dashboard/memories
 
 ## Example Conversation
-
 ```
 User: "I can't remember my order number, but I asked about it earlier."
 Agent: *searches memory for prior messages about order number*
