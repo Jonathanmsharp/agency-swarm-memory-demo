@@ -1,56 +1,52 @@
+import os
+from typing import Dict, List
+
 from agency_swarm.tools import BaseTool
+from mem0 import Memory, MemoryClient
+from mem0.configs.base import MemoryConfig
 from pydantic import Field
-from typing import List, Dict
-import json
-from memory_agency.config import MEMORY_PATH, get_memory_client, init_memory_store
+
 
 class AddMemoryTool(BaseTool):
     """Store conversation messages into long-term memory.
-    
+
     Example:
         messages=[
             {"role": "user", "content": "My order number is 12345"},
             {"role": "assistant", "content": "I've noted your order number: 12345"}
         ]
     """
+
     messages: List[Dict[str, str]] = Field(
         ...,
-        description="List of messages to store. Each message should be a dict with 'role' and 'content' keys."
-    )
-    user_id: str = Field(
-        ...,
-        description="Unique identifier for the user whose memory this belongs to."
+        description="List of messages to store. Each message should be a dict with 'role' and 'content' keys.",
     )
 
     def run(self) -> str:
         """Store the messages in memory and return a confirmation."""
-        client = get_memory_client()
+        if api_key := os.getenv("MEM0_API_KEY"):
+            client = MemoryClient(api_key=api_key)
+        else:
+            client = None
+        user_id = self._shared_state.get("user_id", "user_123")
+
         if client:
             try:
-                client.add(messages=self.messages, user_id=self.user_id, output_format="v1.1")
-                return f"Successfully stored {len(self.messages)} messages for user {self.user_id}"
+                response = client.add(
+                    messages=self.messages, user_id=user_id, output_format="v1.1"
+                )
+                return f"Successfully stored {len(self.messages)} messages for user {user_id}. Response: {response}"
             except Exception as e:
                 print(f"Warning: Failed to use mem0 API: {str(e)}")
 
-        # Local storage fallback
-        init_memory_store()
+        # Local storage fallback using Memory()
+        local_memory = Memory(config=MemoryConfig(version="v1.1"))
+        if not local_memory:
+            return "Error: Could not initialize local memory storage"
+
         try:
-            with open(MEMORY_PATH, 'r') as f:
-                memory_store = json.load(f)
-
-            if self.user_id not in memory_store:
-                memory_store[self.user_id] = []
-            
-            for msg in self.messages:
-                memory_store[self.user_id].append({
-                    "text": msg["content"],
-                    "role": msg["role"]
-                })
-
-            with open(MEMORY_PATH, 'w') as f:
-                json.dump(memory_store, f, indent=2)
-
-            return f"Successfully stored {len(self.messages)} messages locally for user {self.user_id}"
+            local_memory.add(messages=self.messages, user_id=user_id)
+            return f"Successfully stored {len(self.messages)} messages locally for user {user_id}"
         except Exception as e:
             return f"Error: Could not store messages: {str(e)}"
 
@@ -59,8 +55,7 @@ if __name__ == "__main__":
     tool = AddMemoryTool(
         messages=[
             {"role": "user", "content": "My order number is 12345"},
-            {"role": "assistant", "content": "I've noted your order number: 12345"}
-        ],
-        user_id="test_user_1"
+            {"role": "assistant", "content": "I've noted your order number: 12345"},
+        ]
     )
-    print(tool.run()) 
+    print(tool.run())

@@ -1,72 +1,67 @@
+import os
+from typing import Dict, List
+
 from agency_swarm.tools import BaseTool
+from mem0 import Memory, MemoryClient
+from mem0.configs.base import MemoryConfig
 from pydantic import Field
-from typing import List, Dict
-import json
-from memory_agency.config import MEMORY_PATH, get_memory_client, init_memory_store
 
 
 class SearchMemoryTool(BaseTool):
     """Search for relevant memories based on a query."""
-    query: str = Field(
-        ...,
-        description="The search query to find relevant memories."
-    )
-    user_id: str = Field(
-        ...,
-        description="Unique identifier for the user whose memory to search."
-    )
-    top_k: int = Field(
-        default=5,
-        description="Maximum number of memories to return."
-    )
+
+    query: str = Field(..., description="The search query to find relevant memories.")
+    top_k: int = Field(default=5, description="Maximum number of memories to return.")
 
     def run(self) -> List[Dict[str, str]]:
         """Search memory and return relevant messages."""
-        client = get_memory_client()
+        if api_key := os.getenv("MEM0_API_KEY"):
+            client = MemoryClient(api_key=api_key)
+        else:
+            client = None
+        user_id = self._shared_state.get("user_id", "user_123")
+
         if client:
             try:
                 return client.search(
                     query=self.query,
-                    user_id=self.user_id,
+                    user_id=user_id,
                     output_format="v1.1",
-                    top_k=self.top_k
+                    top_k=self.top_k,
                 )
             except Exception as e:
                 print(f"Warning: Failed to use mem0 API: {str(e)}")
 
-        # Local storage fallback
-        init_memory_store()
+        # Local storage fallback using Memory()
+        local_memory = Memory(config=MemoryConfig(version="v1.1"))
+        if not local_memory:
+            return []
+
         try:
-            with open(MEMORY_PATH, 'r') as f:
-                memory_store = json.load(f)
+            memories = local_memory.search(
+                query=self.query,
+                user_id=user_id,
+                limit=self.top_k,
+            )
 
-            entries = memory_store.get(self.user_id, [])
-            if not entries:
-                return []
+            # Convert memories to expected format
+            formatted_memories = []
+            for memory in memories:
+                formatted_memories.append(
+                    {
+                        "text": memory["memory"],
+                        "role": memory.get("metadata", {}).get("role", "unknown"),
+                        "score": memory.get("score", 1.0),
+                    }
+                )
 
-            query_terms = self.query.lower().split()
-            matches = []
-            for message in entries:
-                text = message['text'].lower()
-                if any(term in text for term in query_terms):
-                    matches.append({
-                        "text": message["text"],
-                        "role": message["role"],
-                        "score": 1.0 if all(term in text for term in query_terms) else 0.5
-                    })
-
-            matches.sort(key=lambda x: x["score"], reverse=True)
-            return matches[:self.top_k]
+            return formatted_memories
         except Exception as e:
             print(f"Error searching memory: {str(e)}")
             return []
 
 
 if __name__ == "__main__":
-    tool = SearchMemoryTool(
-        query="order number",
-        user_id="test_user_1",
-        top_k=3
-    )
+    tool = SearchMemoryTool(query="order number", top_k=3)
     results = tool.run()
     print("Found memories:", results)

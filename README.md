@@ -97,7 +97,7 @@ memory_agency/
 Both implementations provide three core operations through Agency Swarm tools:
 - **Add Memory**: Store new conversation messages
 - **Search Memory**: Retrieve relevant past conversations
-- **Delete Memory**: Clear user-specific memory
+- **Delete Memory**: Clear a specific memory or all memories for a user
 
 ## Testing
 

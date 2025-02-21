@@ -1,43 +1,79 @@
+import os
+from typing import Optional
+
 from agency_swarm.tools import BaseTool
+from mem0 import Memory, MemoryClient
+from mem0.configs.base import MemoryConfig
 from pydantic import Field
-import json
-from memory_agency.config import MEMORY_PATH, get_memory_client, init_memory_store
 
 
 class DeleteMemoryTool(BaseTool):
-    """Delete all stored memory for a specific user."""
-    user_id: str = Field(
-        ...,
-        description="Unique identifier for the user whose memory to delete."
+    """Delete stored memory - supports selective deletion by id or all memories for the current user."""
+
+    memory_id: Optional[str] = Field(
+        None,
+        description="Optional specific memory ID to delete. If provided, only this memory will be deleted.",
+    )
+    confirm_delete_all: bool = Field(
+        default=False,
+        description="Set to true to confirm deletion of all memories for the current user. Required for deleting all memories.",
     )
 
     def run(self) -> str:
-        """Delete all memories for the specified user."""
-        client = get_memory_client()
-        if client:
-            try:
-                client.delete_all(user_id=self.user_id)
-                return f"Successfully deleted all memories for user {self.user_id}"
-            except Exception as e:
-                print(f"Warning: Failed to use mem0 API: {str(e)}")
+        """Delete memories based on provided parameters."""
+        if api_key := os.getenv("MEM0_API_KEY"):
+            client = MemoryClient(api_key=api_key)
+        else:
+            client = None
+        user_id = self._shared_state.get("user_id", "user_123")
 
-        # Local storage fallback
-        init_memory_store()
-        try:
-            with open(MEMORY_PATH, 'r') as f:
-                memory_store = json.load(f)
+        if not user_id:
+            return "Error: No user_id found in shared state"
 
-            if self.user_id in memory_store:
-                del memory_store[self.user_id]
-                with open(MEMORY_PATH, 'w') as f:
-                    json.dump(memory_store, f, indent=2)
-                return f"Successfully deleted all memories for user {self.user_id}"
-            return f"No memories found for user {self.user_id}"
+        # Handle selective deletion by memory_id
+        if self.memory_id:
+            if client:
+                try:
+                    client.delete(memory_id=self.memory_id)
+                    return f"Successfully deleted memory {self.memory_id}"
+                except Exception as e:
+                    print(f"Warning: Failed to use mem0 API: {str(e)}")
 
-        except Exception as e:
-            return f"Error deleting memories: {str(e)}"
+            local_memory = Memory(config=MemoryConfig(version="v1.1"))
+            if local_memory:
+                try:
+                    local_memory.delete(memory_id=self.memory_id)
+                    return f"Successfully deleted memory {self.memory_id}"
+                except Exception as e:
+                    return f"Error deleting memory: {str(e)}"
+
+        # Handle deletion of all memories for a user
+        if self.confirm_delete_all:
+            if client:
+                try:
+                    response = client.delete_all(user_id=user_id)
+                    return f"Successfully deleted all memories for user {user_id}. Response: {response}"
+                except Exception as e:
+                    print(f"Warning: Failed to use mem0 API: {str(e)}")
+
+            if local_memory:
+                try:
+                    response = local_memory.delete_all(user_id=user_id)
+                    return f"Successfully deleted all memories for user {user_id}. Response: {response}"
+                except Exception as e:
+                    return f"Error deleting memories: {str(e)}"
+
+            return "Error: Memory deletion failed"
+
+        return "Error: Must provide either memory_id or confirm_delete_all=True"
 
 
 if __name__ == "__main__":
-    tool = DeleteMemoryTool(user_id="test_user_1")
-    print(tool.run()) 
+    # Test selective deletion
+    memory_id = "b301cb0b-cce6-48b3-9421-ac7ae4b74d7b"
+    tool = DeleteMemoryTool(memory_id=memory_id)
+    print("Testing selective deletion:", tool.run())
+
+    # Test deletion of all memories for a user
+    tool = DeleteMemoryTool(confirm_delete_all=True)
+    print("Testing user deletion:", tool.run())
