@@ -71,8 +71,8 @@ class DeleteMemoryTool(BaseTool):
 if __name__ == "__main__":
     # Test selective deletion
     memory_id = "b301cb0b-cce6-48b3-9421-ac7ae4b74d7b"
-    tool = DeleteMemoryTool(memory_id=memory_id)
-    print("Testing selective deletion:", tool.run())
+    # tool = DeleteMemoryTool(memory_id=memory_id)
+    # print("Testing selective deletion:", tool.run())
 
     # Test deletion of all memories for a user
     tool = DeleteMemoryTool(confirm_delete_all=True)

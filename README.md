@@ -14,11 +14,13 @@ A minimalist implementation of a customer support agent with long-term memory us
 
 ## Example Conversation
 ```
-User: "I'd like to request a refund for my order #12345."
-... (new conversation starts)
-User: "I'd like to get a refund for order #12345."
+User: "Hi, I bought some dairy products yesterday but changed my mind. Can I get a refund for order #12345?"
+Agent: "I apologize, but our policy states that dairy products cannot be refunded due to food safety regulations. I'll make a note of this interaction."
+User: "Okay, I understand. Thank you for your help." (here the agent stores the memory)
+... (new conversation starts, one week later)
+User: "I'd like to return the dairy items from order #12345 for a refund."
 Agent: *searching memory for previous interactions about this order*
-Agent: "I can see from my records that you've already submitted a refund request for order #12345."
+Agent: "I can see from our previous conversation that I informed you about our no-refund policy for dairy products due to food safety regulations. Is there something else I can help you with today?"
 ```
 
 ## Installation
