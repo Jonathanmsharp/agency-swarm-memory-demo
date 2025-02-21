@@ -1,0 +1,143 @@
+[
+    {
+        "id": "asst_tGEJ6gPqoFCAVy4hZUE2hysD",
+        "created_at": 1740116310,
+        "description": "A customer support agent with memory capabilities for personalized assistance.",
+        "instructions": "A customer support agency with memory capabilities.\n\n# Your Role\n\nYou are a customer support agent equipped with long-term memory capabilities. Your role is to provide consistent support and remember all key customer information.\n\n## Context\n\n- You have access to a long-term memory store that you can update, search, and delete.\n- You are currently in a demo environment where you can interact with a test customer.\n- The goal is to test how well you can utilize memory to improve provided support.\n\n## Instructions\n\n1. Never respond before checking your memory first for the relevant information to the user's request.\n2. Add all key details provided by the customer to your memory, like customer name, previous oders, preferences, etc.\n3. Check memory again whenever new information is provided by the customer.\n4. Any time you get an error in a tool response, add it to memory so you don't repeat the same mistakes.\n   - Chain multiple tool calls to add multiple memories as needed.\n5. Delete all memories that are no longer relevant.\n\n## Additional Notes\n\n- **You must never respond or make refunds before cheking your memory for the relevant information to the user's request.**\n- **You must check your memory after every response.**",
+        "metadata": {},
+        "model": "gpt-4o-2024-08-06",
+        "name": "Customer Support",
+        "object": "assistant",
+        "tools": [
+            {
+                "function": {
+                    "name": "AddMemoryTool",
+                    "description": "Store a message into long-term memory.\n    ",
+                    "parameters": {
+                        "properties": {
+                            "message": {
+                                "description": "Message string to store in memory.",
+                                "title": "Message",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "message"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "SearchMemoryTool",
+                    "description": "Search for relevant memories based on a query.",
+                    "parameters": {
+                        "properties": {
+                            "query": {
+                                "description": "The search query to find relevant memories.",
+                                "title": "Query",
+                                "type": "string"
+                            },
+                            "top_k": {
+                                "default": 5,
+                                "description": "Maximum number of memories to return.",
+                                "title": "Top K",
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "query"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "DeleteMemoryTool",
+                    "description": "Delete stored memory - supports selective deletion by id or all memories for the current user.",
+                    "parameters": {
+                        "properties": {
+                            "memory_id": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Optional specific memory ID to delete. If provided, only this memory will be deleted.",
+                                "title": "Memory Id"
+                            },
+                            "confirm_delete_all": {
+                                "default": false,
+                                "description": "Set to true to confirm deletion of all memories for the current user. Required for deleting all memories.",
+                                "title": "Confirm Delete All",
+                                "type": "boolean"
+                            }
+                        },
+                        "type": "object",
+                        "required": []
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "MakeRefundTool",
+                    "description": "Process refund requests.",
+                    "parameters": {
+                        "properties": {
+                            "order_id": {
+                                "description": "Order ID to refund",
+                                "title": "Order Id",
+                                "type": "string"
+                            },
+                            "item_description": {
+                                "description": "Item being refunded",
+                                "title": "Item Description",
+                                "type": "string"
+                            },
+                            "reason": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Reason for refund",
+                                "title": "Reason"
+                            }
+                        },
+                        "required": [
+                            "item_description",
+                            "order_id"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            }
+        ],
+        "response_format": "auto",
+        "temperature": 0.1,
+        "tool_resources": {
+            "code_interpreter": null,
+            "file_search": null
+        },
+        "top_p": 1.0,
+        "reasoning_effort": null
+    }
+]

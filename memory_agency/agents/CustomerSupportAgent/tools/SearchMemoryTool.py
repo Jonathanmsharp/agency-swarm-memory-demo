@@ -52,6 +52,7 @@ class SearchMemoryTool(BaseTool):
                         "text": memory["memory"],
                         "role": memory.get("metadata", {}).get("role", "unknown"),
                         "score": memory.get("score", 1.0),
+                        "id": memory.get("id", "unknown"),
                     }
                 )
 
@@ -62,6 +63,6 @@ class SearchMemoryTool(BaseTool):
 
 
 if __name__ == "__main__":
-    tool = SearchMemoryTool(query="dairy", top_k=3)
+    tool = SearchMemoryTool(query="can I refund dairy?", top_k=3)
     results = tool.run()
     print("Found memories:", results)
