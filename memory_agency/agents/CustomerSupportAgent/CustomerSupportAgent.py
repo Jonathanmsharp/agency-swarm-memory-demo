@@ -16,7 +16,6 @@ class CustomerSupportAgent(Agent):
             description="A customer support agent with memory capabilities for personalized assistance.",
             instructions=str(current_dir / "instructions.md"),
             tools=[AddMemoryTool, SearchMemoryTool, DeleteMemoryTool, MakeRefundTool],
-            temperature=0.5,
             max_prompt_tokens=25000,
         )
 

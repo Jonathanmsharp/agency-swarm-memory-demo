@@ -14,7 +14,7 @@ A minimalist implementation of a customer support agent with long-term memory us
 
 ## Example Conversation
 ```
-User: "Hi, I bought some dairy products yesterday but changed my mind. Can I get a refund for order #12345?"
+User: "Hi, I bought some dairy products (milk and cheese) yesterday but changed my mind. Can I get a refund for order #12345?"
 Agent: "I apologize, but our policy states that dairy products cannot be refunded due to food safety regulations. I'll make a note of this interaction."
 User: "Okay, I understand. Thank you for your help." (here the agent stores the memory)
 ... (new conversation starts, one week later)

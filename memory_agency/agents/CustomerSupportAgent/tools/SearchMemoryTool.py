@@ -62,6 +62,6 @@ class SearchMemoryTool(BaseTool):
 
 
 if __name__ == "__main__":
-    tool = SearchMemoryTool(query="order number", top_k=3)
+    tool = SearchMemoryTool(query="dairy", top_k=3)
     results = tool.run()
     print("Found memories:", results)

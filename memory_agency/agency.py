@@ -16,7 +16,7 @@ def main(user_id: str):
     agency = Agency(
         [support_agent],
         shared_instructions="A customer support agency with memory capabilities.",
-        temperature=0.5,
+        temperature=0.1,
         max_prompt_tokens=25000,
     )
     support_agent.shared_state.set("user_id", user_id)
