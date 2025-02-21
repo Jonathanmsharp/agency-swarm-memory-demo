@@ -12,7 +12,6 @@ def main(user_id: str):
         raise ValueError("OPENAI_API_KEY not found in environment variables")
 
     support_agent = CustomerSupportAgent()
-    support_agent.shared_state.set("user_id", user_id)
 
     agency = Agency(
         [support_agent],
@@ -20,6 +19,7 @@ def main(user_id: str):
         temperature=0.5,
         max_prompt_tokens=25000,
     )
+    support_agent.shared_state.set("user_id", user_id)
 
     agency.run_demo()
 
