@@ -4,13 +4,13 @@ from agency_swarm import Agency
 from agents.CustomerSupportAgent import CustomerSupportAgent
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
-
+print(os.getenv("OPENAI_API_KEY"))
 def main(user_id: str):
     if not os.getenv("OPENAI_API_KEY"):
         raise ValueError("OPENAI_API_KEY not found in environment variables")
-
+    print(os.getenv("OPENAI_API_KEY"))
     support_agent = CustomerSupportAgent()
 
     agency = Agency(

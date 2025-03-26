@@ -1,0 +1,363 @@
+[
+    {
+        "id": "asst_YMlCC614rMe95ntRSiuumSl1",
+        "created_at": 1742946718,
+        "description": "A customer support agent with memory capabilities for personalized assistance.",
+        "instructions": "A customer support agency with memory capabilities.\n\n# Your Role\n\nYou are a customer support agent equipped with long-term memory capabilities. Your role is to provide consistent support and remember all key customer information.\n\n## Context\n\n- You have access to a long-term memory store that you can update, search, and delete.\n- You are currently in a demo environment where you can interact with a test customer.\n- The goal is to test how well you can utilize memory to improve provided support.\n\n## Instructions\n\n1. Never respond before checking your memory first for the relevant information to the user's request.\n2. Add all key details provided by the customer to your memory, like customer name, previous orders, preferences, etc.\n3. Check memory again whenever new information is provided by the customer.\n4. Any time you get an error in a tool response, add it to memory so you don't repeat the same mistakes.\n   - Chain multiple tool calls to add multiple memories as needed.\n5. Delete all memories that are no longer relevant.\n\n## Additional Notes\n\n- **You must never respond or make refunds before cheking your memory for the relevant information to the user's request.**\n- **You must check your memory after every response.**\n",
+        "metadata": {},
+        "model": "gpt-4o-2024-08-06",
+        "name": "Customer Support",
+        "object": "assistant",
+        "tools": [
+            {
+                "function": {
+                    "name": "AddMemoryTool",
+                    "description": "Store a message into long-term memory.\n    ",
+                    "parameters": {
+                        "properties": {
+                            "message": {
+                                "description": "Message string to store in memory.",
+                                "title": "Message",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "message"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "SearchMemoryTool",
+                    "description": "Search for relevant memories based on a query.",
+                    "parameters": {
+                        "properties": {
+                            "query": {
+                                "description": "The search query to find relevant memories.",
+                                "title": "Query",
+                                "type": "string"
+                            },
+                            "top_k": {
+                                "default": 5,
+                                "description": "Maximum number of memories to return.",
+                                "title": "Top K",
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "query"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "DeleteMemoryTool",
+                    "description": "Delete stored memory - supports selective deletion by id or all memories for the current user.",
+                    "parameters": {
+                        "properties": {
+                            "memory_id": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Optional specific memory ID to delete. If provided, only this memory will be deleted.",
+                                "title": "Memory Id"
+                            },
+                            "confirm_delete_all": {
+                                "default": false,
+                                "description": "Set to true to confirm deletion of all memories for the current user. Required for deleting all memories.",
+                                "title": "Confirm Delete All",
+                                "type": "boolean"
+                            }
+                        },
+                        "type": "object",
+                        "required": []
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "MakeRefundTool",
+                    "description": "Process refund requests.",
+                    "parameters": {
+                        "properties": {
+                            "order_id": {
+                                "description": "Order ID to refund",
+                                "title": "Order Id",
+                                "type": "string"
+                            },
+                            "item_description": {
+                                "description": "Item being refunded",
+                                "title": "Item Description",
+                                "type": "string"
+                            },
+                            "reason": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Reason for refund",
+                                "title": "Reason"
+                            }
+                        },
+                        "required": [
+                            "item_description",
+                            "order_id"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            }
+        ],
+        "response_format": "auto",
+        "temperature": 0.1,
+        "tool_resources": {
+            "code_interpreter": null,
+            "file_search": null
+        },
+        "top_p": 1.0,
+        "reasoning_effort": null
+    },
+    {
+        "id": "asst_JKSITXxZ3CHjVRhWtqztJBqP",
+        "created_at": 1742947369,
+        "description": "A customer support agent with memory capabilities for personalized assistance.",
+        "instructions": "A customer support agency with memory capabilities.\n\n# Your Role\n\nYou are a customer support agent equipped with long-term memory capabilities. Your role is to provide consistent support and remember all key customer information.\n\n## Context\n\n- You have access to a long-term memory store that you can update, search, and delete.\n- You are currently in a demo environment where you can interact with a test customer.\n- The goal is to test how well you can utilize memory to improve provided support.\n\n## Instructions\n\n1. Never respond before checking your memory first for the relevant information to the user's request.\n2. Add all key details provided by the customer to your memory, like customer name, previous orders, preferences, etc.\n3. Check memory again whenever new information is provided by the customer.\n4. Any time you get an error in a tool response, add it to memory so you don't repeat the same mistakes.\n   - Chain multiple tool calls to add multiple memories as needed.\n5. Delete all memories that are no longer relevant.\n\n## Additional Notes\n\n- **You must never respond or make refunds before cheking your memory for the relevant information to the user's request.**\n- **You must check your memory after every response.**\n",
+        "metadata": {},
+        "model": "gpt-4o-2024-08-06",
+        "name": "Customer Support",
+        "object": "assistant",
+        "tools": [
+            {
+                "function": {
+                    "name": "AddMemoryTool",
+                    "description": "Store a message into long-term memory.\n    ",
+                    "parameters": {
+                        "properties": {
+                            "message": {
+                                "description": "Message string to store in memory.",
+                                "title": "Message",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "message"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "SearchMemoryTool",
+                    "description": "Search for relevant memories based on a query.",
+                    "parameters": {
+                        "properties": {
+                            "query": {
+                                "description": "The search query to find relevant memories.",
+                                "title": "Query",
+                                "type": "string"
+                            },
+                            "top_k": {
+                                "default": 5,
+                                "description": "Maximum number of memories to return.",
+                                "title": "Top K",
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "query"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "DeleteMemoryTool",
+                    "description": "Delete stored memory - supports selective deletion by id or all memories for the current user.",
+                    "parameters": {
+                        "properties": {
+                            "memory_id": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Optional specific memory ID to delete. If provided, only this memory will be deleted.",
+                                "title": "Memory Id"
+                            },
+                            "confirm_delete_all": {
+                                "default": false,
+                                "description": "Set to true to confirm deletion of all memories for the current user. Required for deleting all memories.",
+                                "title": "Confirm Delete All",
+                                "type": "boolean"
+                            }
+                        },
+                        "type": "object",
+                        "required": []
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "MakeRefundTool",
+                    "description": "Process refund requests.",
+                    "parameters": {
+                        "properties": {
+                            "order_id": {
+                                "description": "Order ID to refund",
+                                "title": "Order Id",
+                                "type": "string"
+                            },
+                            "item_description": {
+                                "description": "Item being refunded",
+                                "title": "Item Description",
+                                "type": "string"
+                            },
+                            "reason": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Reason for refund",
+                                "title": "Reason"
+                            }
+                        },
+                        "required": [
+                            "item_description",
+                            "order_id"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "SQLQueryTool",
+                    "description": "Tool for interacting with SQL Server databases. This tool allows agents to:\n1. List available tables in a SQL Server database\n2. Read table contents (with optional filtering)\n3. Execute custom SQL queries\nAll operations use secure connection details from environment variables.",
+                    "parameters": {
+                        "properties": {
+                            "operation": {
+                                "description": "Operation to perform: 'list_tables', 'read_table', or 'execute_query'",
+                                "title": "Operation",
+                                "type": "string"
+                            },
+                            "table_name": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Table name to read data from (required for 'read_table' operation)",
+                                "title": "Table Name"
+                            },
+                            "query": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "SQL query to execute (required for 'execute_query' operation)",
+                                "title": "Query"
+                            },
+                            "limit": {
+                                "anyOf": [
+                                    {
+                                        "type": "integer"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": 100,
+                                "description": "Maximum number of rows to return (default: 100)",
+                                "title": "Limit"
+                            },
+                            "where_clause": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "WHERE clause for filtering data when reading a table",
+                                "title": "Where Clause"
+                            },
+                            "verbose_reasoning": {
+                                "default": false,
+                                "description": "Whether to include detailed reasoning in the output",
+                                "title": "Verbose Reasoning",
+                                "type": "boolean"
+                            }
+                        },
+                        "required": [
+                            "operation"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            }
+        ],
+        "response_format": "auto",
+        "temperature": 0.1,
+        "tool_resources": {
+            "code_interpreter": null,
+            "file_search": null
+        },
+        "top_p": 1.0,
+        "reasoning_effort": null
+    }
+]

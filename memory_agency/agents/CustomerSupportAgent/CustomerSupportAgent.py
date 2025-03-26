@@ -6,7 +6,7 @@ from .tools.AddMemoryTool import AddMemoryTool
 from .tools.DeleteMemoryTool import DeleteMemoryTool
 from .tools.MakeRefundTool import MakeRefundTool
 from .tools.SearchMemoryTool import SearchMemoryTool
-
+from .tools.SQLQueryTool import SQLQueryTool
 
 class CustomerSupportAgent(Agent):
     def __init__(self):
@@ -15,7 +15,7 @@ class CustomerSupportAgent(Agent):
             name="Customer Support",
             description="A customer support agent with memory capabilities for personalized assistance.",
             instructions=str(current_dir / "instructions.md"),
-            tools=[AddMemoryTool, SearchMemoryTool, DeleteMemoryTool, MakeRefundTool],
+            tools=[AddMemoryTool, SearchMemoryTool, DeleteMemoryTool, MakeRefundTool, SQLQueryTool],
             max_prompt_tokens=25000,
         )
 
